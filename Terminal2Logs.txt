@@ -1,0 +1,14 @@
+
+
+🧠 [Mock Brain]: Received query: "Password."
+🧠 [Mock Brain]: Replying with: "To reset your password, please go to the IT portal and click on 'Forgot Password'."
+
+
+🧠 [Mock Brain]: Received query: "Help."
+🧠 [Mock Brain]: Replying with: "I can help you with password resets, network connectivity, and software installation. What do you need?"
+
+
+🧠 [Mock Brain]: Received query: "Internet."
+🧠 [Mock Brain]: Replying with: "If you are having network issues, please try restarting your router or contact the helpdesk at 555-0199."
+
+PS D:\Folder Z\Office extra\LiveKit-Web-AI-VoiceCall> 

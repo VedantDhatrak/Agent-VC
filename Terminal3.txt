@@ -1,0 +1,290 @@
+PS D:\Folder Z\Office extra\LiveKit-Web-AI-VoiceCall> node agent.js dev 
+◇ injected env (6) from .env // tip: ◈ secrets for agents [www.dotenvx.com]
+[10:54:14.527] DEBUG (20436): initializing inference runner
+    runner: "lk_eot_audio"
+[10:54:14.758] DEBUG (20436): all inference runners initialized
+[10:54:14.760] INFO (21056): starting worker
+    version: "1.5.2"
+[10:54:14.814] INFO (21056): Server is listening on port 54157
+[10:54:14.994] DEBUG (21056): connected to LiveKit server
+    version: "1.5.2"
+[10:54:15.032] INFO (21056): registered worker
+    version: "1.5.2"
+    id: "AW_F9kBgvjFJz49"
+    agentName: ""
+    agentNameIsEnv: false
+    server_info: {
+      "edition": "Cloud",
+      "version": "1.13.3",
+      "protocol": 17,
+      "region": "India South",
+      "nodeId": "NC_OHYDERABAD1A_XQkHPpCyYrit",
+      "debugInfo": "",
+      "agentProtocol": 0
+    }
+(node:21056) [DEP0190] DeprecationWarning: Passing args to a child process with shell option true can lead to security vulnerabilities, as the arguments are not escaped, only concatenated.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+[10:54:43.723] INFO (21056): received job request
+    version: "1.5.2"
+    jobId: "AJ_w996uHXa4qai"
+    resuming: false
+    agentName: ""
+◇ injected env (0) from .env // tip: ◈ secrets for agents [www.dotenvx.com]
+[10:54:46.368] DEBUG (12192): initializing job runner
+[10:54:46.374] DEBUG (12192): job runner initialized
+[Agent] Connecting to room...
+[10:54:46.383] DEBUG (12192): job started
+    jobID: "AJ_w996uHXa4qai"
+{"level":20,"time":1784265887080,"pid":12192,"hostname":"Lenovo","name":"lk-rtc","msg":"Connect callback received"}
+[Agent] Successfully connected to room: my-ai-room
+[10:54:47.285] DEBUG (12192): connection state changed
+    state: 1
+🚀 [Agent]: Successfully started in room!
+🧠 [Conversation Item]: {"type":"conversation_item_added","item":{"id":"item_d4f2f53e-f8f","type":"agent_handoff","newAgentId":"default_agent"},"createdAt":1784265887288}
+✅ [Agent]: Finished responding and is listening.
+[10:54:47.295] DEBUG (12192): Agent handoff inserted into chat context
+    newAgentId: "default_agent"
+[10:54:47.310] DEBUG (12192): setting participant
+    participantIdentity: "user-1742"
+[10:54:47.310] DEBUG (12192): setting participant audio input
+    participant: "user-1742"
+[10:54:47.311] INFO (12192): participantValue.trackPublications
+    participantValue: "user-1742"
+    trackPublications: [
+      {
+        "info": {
+          "sid": "TR_AMtj5dCqmYH499",
+          "name": "",
+          "kind": "KIND_AUDIO",
+          "source": "SOURCE_MICROPHONE",
+          "simulcasted": false,
+          "width": 0,
+          "height": 0,
+          "mimeType": "audio/red",
+          "muted": false,
+          "remote": true,
+          "encryptionType": "NONE",
+          "audioFeatures": [
+            "TF_AUTO_GAIN_CONTROL",
+            "TF_ECHO_CANCELLATION",
+            "TF_NOISE_SUPPRESSION"
+          ],
+          "packetTrailerFeatures": []
+        },
+        "ffiHandle": {},
+        "subscribed": true,
+        "track": {
+          "roomRef": {},
+          "audioStreams": {},
+          "info": {
+            "sid": "TR_AMtj5dCqmYH499",
+            "name": "",
+            "kind": "KIND_AUDIO",
+            "streamState": "STATE_ACTIVE",
+            "muted": false,
+            "remote": true
+          },
+          "ffi_handle": {},
+          "streamFinalizationRegistry": {}
+        }
+      }
+    ]
+    lengthOfTrackPublications: 1
+[10:54:47.312] DEBUG (12192): onTrackSubscribed in _input
+    participant: "user-1742"
+[10:54:47.316] DEBUG (12192): Task.runTask: task AgentActivity_onEnter started
+[10:54:47.345] DEBUG (12192): Task.runTask: task AgentActivity_onEnter done
+[10:54:47.346] DEBUG (12192): using audio io: `ParticipantAudioInputStream` -> `AgentSession` -> `SyncedAudioOutput`
+[10:54:47.346] DEBUG (12192): using transcript io: `AgentSession` -> `SyncedTextOutput`
+[10:54:47.605] DEBUG (12192): audio turn detector initialized
+    model: "turn-detector-v1"
+    thresholds: {
+      "en": 0.56,
+      "es": 0.59,
+      "hi": 0.575,
+      "it": 0.64,
+      "nl": 0.75,
+      "pt": 0.665,
+      "fr": 0.575,
+      "id": 0.47,
+      "ja": 0.37,
+      "ko": 0.695,
+      "tr": 0.65,
+      "zh": 0.59,
+      "ar": 0.355,
+      "de": 0.495
+    }
+    defaultThreshold: 0.56
+[10:54:47.949] DEBUG (12192): Session started with ID: c3bca78fb1914b3aa62fbba569008c58
+[10:54:59.534] DEBUG (12192): VAD task: START_OF_SPEECH
+[10:55:00.592] DEBUG (12192): VAD task: END_OF_SPEECH
+[10:55:00.594] DEBUG (12192): running EOU detection
+    audioTranscript: ""
+[10:55:00.594] DEBUG (12192): skipping EOU detection
+[10:55:01.393] DEBUG (12192): Received message type partial_transcript
+    data: {
+      "message_type": "partial_transcript",
+      "text": "PasswordπÇé",
+      "words": []
+    }
+✍️ [STT Interim]: "Password。"[10:55:01.394] DEBUG (12192): interim transcript
+    transcript: "PasswordπÇé"
+📝 [STT Final]: "Password。"
+[10:55:02.114] DEBUG (12192): received user transcript
+    user_transcript: "PasswordπÇé"
+    language: "en"
+🧠 [Conversation Item]: {"type":"conversation_item_added","item":{"id":"item_6ff8e652-72c","type":"message","role":"user","content":["Password。"],"interrupted":false,"transcriptConfidence":0,"metrics":{"startedSpeakingAt":1784265899.47,"stoppedSpeakingAt":1784265900.017,"transcriptionDelay":2.097,"endOfTurnDelay":2.106,"onUserTurnCompletedDelay":0}},"createdAt":1784265902126}
+🤖 [Agent State]: thinking
+[10:55:02.114] DEBUG (12192): triggering preemptive generation (FINAL_TRANSCRIPT)
+    transcript: "PasswordπÇé"
+[10:55:02.115] INFO (12192): starting preemptive generation
+    newTranscript: "PasswordπÇé"
+    transcriptConfidence: 0
+[10:55:02.116] INFO (12192): Creating speech handle
+    speech_id: "speech_ce1a5f2c-8d7"
+[10:55:02.116] DEBUG (12192): Task.runTask: task AgentActivity.pipelineReply started
+[10:55:02.117] DEBUG (12192): Task.runTask: task performLLMInference started
+[10:55:02.119] DEBUG (12192): running EOU detection on stt FINAL_TRANSCRIPT
+[10:55:02.119] DEBUG (12192): running EOU detection
+    audioTranscript: "PasswordπÇé"
+[10:55:02.121] DEBUG (12192): Running turn detector model
+[10:55:02.121] DEBUG (12192): eot prediction
+    endOfTurnProbability: 0.807843804359436
+    unlikelyThreshold: 0.56
+    endpointingDelay: 300
+    language: "en"
+    trigger: "stt"
+    fromCache: true
+[10:55:02.123] DEBUG (12192): end of user turn
+    transcript: "PasswordπÇé"
+[10:55:02.123] DEBUG (12192): Task.runTask: task AgentActivity.userTurnCompleted started
+[10:55:02.124] DEBUG (12192): using preemptive generation
+    preemptiveLeadTime: 5
+[10:55:02.126] DEBUG (12192): EOU detection task completed
+[10:55:02.126] DEBUG (12192): Task.runTask: task AgentActivity.userTurnCompleted done
+[10:55:02.128] DEBUG (12192): Task.runTask: task AgentActivity.pipelineReply.produceSegments started
+[10:55:02.131] DEBUG (12192): Task.runTask: task performToolExecutions started
+[10:55:02.293] DEBUG (12192): Task.runTask: task performTTSInference started
+[10:55:02.295] DEBUG (12192): Task.runTask: task performTextForwarding started
+[10:55:02.295] DEBUG (12192): Task.runTask: task performAudioForwarding started
+[10:55:02.398] DEBUG (12192): Task.runTask: task performTextForwarding done
+[10:55:02.399] DEBUG (12192): Task.runTask: task performToolExecutions done
+[10:55:02.399] DEBUG (12192): Task.runTask: task AgentActivity.pipelineReply.produceSegments done
+[10:55:02.399] DEBUG (12192): Task.runTask: task performLLMInference done
+[10:55:02.411] DEBUG (12192): Received message type partial_transcript
+    data: {
+      "message_type": "partial_transcript",
+      "text": "OKπÇé",
+      "words": []
+    }
+✍️ [STT Interim]: "OK。"[10:55:02.412] DEBUG (12192): interim transcript
+    transcript: "OKπÇé"
+❌ [Google TTS Error]: TypeError: this.queue.push is not a function
+    at GoogleRESTChunkedStream.run (file:///D:/Folder%20Z/Office%20extra/LiveKit-Web-AI-VoiceCall/agent.js:34:18)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async tracer.startActiveSpan.name (file:///D:/Folder%20Z/Office%20extra/LiveKit-Web-AI-VoiceCall/node_modules/@livekit/agents/dist/tts/tts.js:427:22)
+    at async file:///D:/Folder%20Z/Office%20extra/LiveKit-Web-AI-VoiceCall/node_modules/@livekit/agents/dist/telemetry/traces.js:87:16
+    at async DynamicTracer.startActiveSpan (file:///D:/Folder%20Z/Office%20extra/LiveKit-Web-AI-VoiceCall/node_modules/@livekit/agents/dist/telemetry/traces.js:85:12)
+    at async GoogleRESTChunkedStream._mainTaskImpl (file:///D:/Folder%20Z/Office%20extra/LiveKit-Web-AI-VoiceCall/node_modules/@livekit/agents/dist/tts/tts.js:423:16)
+    at async file:///D:/Folder%20Z/Office%20extra/LiveKit-Web-AI-VoiceCall/node_modules/@livekit/agents/dist/telemetry/traces.js:87:16
+    at async DynamicTracer.startActiveSpan (file:///D:/Folder%20Z/Office%20extra/LiveKit-Web-AI-VoiceCall/node_modules/@livekit/agents/dist/telemetry/traces.js:85:12)
+❌ [Agent Error]: {
+  type: 'error',
+  error: {
+    type: 'tts_error',
+    timestamp: 1784265905222,
+    label: 'google_rest_tts',
+    error: TypeError: this.queue.push is not a function
+        at GoogleRESTChunkedStream.run (file:///D:/Folder%20Z/Office%20extra/LiveKit-Web-AI-VoiceCall/agent.js:42:18)
+        at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+        at async tracer.startActiveSpan.name (file:///D:/Folder%20Z/Office%20extra/LiveKit-Web-AI-VoiceCall/node_modules/@livekit/agents/dist/tts/tts.js:427:22)
+        at async file:///D:/Folder%20Z/Office%20extra/LiveKit-Web-AI-VoiceCall/node_modules/@livekit/agents/dist/telemetry/traces.js:87:16
+        at async DynamicTracer.startActiveSpan (file:///D:/Folder%20Z/Office%20extra/LiveKit-Web-AI-VoiceCall/node_modules/@livekit/agents/dist/telemetry/traces.js:85:12)
+        at async GoogleRESTChunkedStream._mainTaskImpl (file:///D:/Folder%20Z/Office%20extra/LiveKit-Web-AI-VoiceCall/node_modules/@livekit/agents/dist/tts/tts.js:423:16)
+        at async file:///D:/Folder%20Z/Office%20extra/LiveKit-Web-AI-VoiceCall/node_modules/@livekit/agents/dist/telemetry/traces.js:87:16
+        at async DynamicTracer.startActiveSpan (file:///D:/Folder%20Z/Office%20extra/LiveKit-Web-AI-VoiceCall/node_modules/@livekit/agents/dist/telemetry/traces.js:85:12),
+    recoverable: false
+  },
+  source: GoogleRESTTTS {
+    _events: [Object: null prototype] {
+      metrics_collected: [Array],
+      error: [Array]
+    },
+    _eventsCount: 2,
+    _maxListeners: undefined,
+    label: 'google_rest_tts',
+    Symbol(shapeMode): false,
+    Symbol(kCapture): false
+  },
+  createdAt: 1784265905222
+}
+[10:55:05.226] DEBUG (12192): firstFrameFut cancelled before first frame
+🧠 [Conversation Item]: {"type":"conversation_item_added","item":{"id":"item_fafee9da-b9e","type":"message","role":"assistant","content":["To reset your password, please go to the IT portal and click on 'Forgot Password'."],"interrupted":false,"metrics":{"llmNodeTtft":0.1737448999999991}},"createdAt":1784265905226}
+🧠 [LLM Output Content]: "["To reset your password, please go to the IT portal and click on 'Forgot Password'."]"
+✅ [Agent]: Finished responding and is listening.
+[10:55:05.226] DEBUG (12192): Task.runTask: task performAudioForwarding done
+[10:55:05.226] DEBUG (12192): Task.runTask: task performTTSInference done
+[10:55:05.227] INFO (12192): playout completed without interruption
+    speech_id: "speech_ce1a5f2c-8d7"
+    message: "To reset your password, please go to the IT portal and click on 'Forgot Password'."
+[10:55:05.229] DEBUG (12192): Task.runTask: task AgentActivity.pipelineReply done
+[10:55:05.230] DEBUG (12192): Unhandled promise rejection
+    jobID: "AJ_w996uHXa4qai"
+    error: {
+      "type": "Error",
+      "message": "Unhandled error. ({\n  type: 'tts_error',\n  timestamp: 1784265905222,\n  label: 'google_rest_tts',\n  error: TypeError: this.queue.push is not a function\n      at GoogleRESTChunkedStream.run (file:///D:/Folder%20Z/Office%20extra/LiveKit-Web-AI-VoiceCall/agent.js:42:18)\n      at process.processTicksAndRejections (node:internal/process/task_queues:103:5)\n      at async tracer.startActiveSpan.name (file:///D:/Folder%20Z/Office%20extra/LiveKit-Web-AI-VoiceCall/node_modules/@livekit/agents/dist/tts/tts.js:427:22)\n      at async file:///D:/Folder%20Z/Office%20extra/LiveKit-Web-AI-VoiceCall/node_modules/@livekit/agents/dist/telemetry/traces.js:87:16\n      at async DynamicTracer.startActiveSpan (file:///D:/Folder%20Z/Office%20extra/LiveKit-Web-AI-VoiceCall/node_modules/@livekit/agents/dist/telemetry/traces.js:85:12)\n      at async GoogleRESTChunkedStream._mainTaskImpl (file:///D:/Folder%20Z/Office%20extra/LiveKit-Web-AI-VoiceCall/node_modules/@livekit/agents/dist/tts/tts.js:423:16)\n      at async file:///D:/Folder%20Z/Office%20extra/LiveKit-Web-AI-VoiceCall/node_modules/@livekit/agents/dist/telemetry/traces.js:87:16\n      at async DynamicTracer.startActiveSpan (file:///D:/Folder%20Z/Office%20extra/LiveKit-Web-AI-VoiceCall/node_modules/@livekit/agents/dist/telemetry/traces.js:85:12),\n  recoverable: false\n})",
+      "stack":
+          Error [ERR_UNHANDLED_ERROR]: Unhandled error. ({
+            type: 'tts_error',
+            timestamp: 1784265905222,
+            label: 'google_rest_tts',
+            error: TypeError: this.queue.push is not a function
+                at GoogleRESTChunkedStream.run (file:///D:/Folder%20Z/Office%20extra/LiveKit-Web-AI-VoiceCall/agent.js:42:18)
+                at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+                at async tracer.startActiveSpan.name (file:///D:/Folder%20Z/Office%20extra/LiveKit-Web-AI-VoiceCall/node_modules/@livekit/agents/dist/tts/tts.js:427:22)
+                at async file:///D:/Folder%20Z/Office%20extra/LiveKit-Web-AI-VoiceCall/node_modules/@livekit/agents/dist/telemetry/traces.js:87:16
+                at async DynamicTracer.startActiveSpan (file:///D:/Folder%20Z/Office%20extra/LiveKit-Web-AI-VoiceCall/node_modules/@livekit/agents/dist/telemetry/traces.js:85:12)
+                at async GoogleRESTChunkedStream._mainTaskImpl (file:///D:/Folder%20Z/Office%20extra/LiveKit-Web-AI-VoiceCall/node_modules/@livekit/agents/dist/tts/tts.js:423:16)
+                at async file:///D:/Folder%20Z/Office%20extra/LiveKit-Web-AI-VoiceCall/node_modules/@livekit/agents/dist/telemetry/traces.js:87:16
+                at async DynamicTracer.startActiveSpan (file:///D:/Folder%20Z/Office%20extra/LiveKit-Web-AI-VoiceCall/node_modules/@livekit/agents/dist/telemetry/traces.js:85:12),
+            recoverable: false
+          })
+              at StreamAdapter.emit (node:events:497:17)
+              at #forwardError (file:///D:/Folder%20Z/Office%20extra/LiveKit-Web-AI-VoiceCall/node_modules/@livekit/agents/dist/tts/stream_adapter.js:14:10)
+              at GoogleRESTTTS.emit (node:events:520:35)
+              at GoogleRESTChunkedStream.emitError (file:///D:/Folder%20Z/Office%20extra/LiveKit-Web-AI-VoiceCall/node_modules/@livekit/agents/dist/tts/tts.js:470:15)
+              at GoogleRESTChunkedStream._mainTaskImpl (file:///D:/Folder%20Z/Office%20extra/LiveKit-Web-AI-VoiceCall/node_modules/@livekit/agents/dist/tts/tts.js:457:16)
+              at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+              at async file:///D:/Folder%20Z/Office%20extra/LiveKit-Web-AI-VoiceCall/node_modules/@livekit/agents/dist/telemetry/traces.js:87:16
+              at async DynamicTracer.startActiveSpan (file:///D:/Folder%20Z/Office%20extra/LiveKit-Web-AI-VoiceCall/node_modules/@livekit/agents/dist/telemetry/traces.js:85:12)
+      "code": "ERR_UNHANDLED_ERROR",
+      "context": {
+        "type": "tts_error",
+        "timestamp": 1784265905222,
+        "label": "google_rest_tts",
+        "error": {},
+        "recoverable": false
+      }
+    }
+✍️ [STT Interim]: "......"[10:55:05.235] DEBUG (12192): Received message type partial_transcript
+    data: {
+      "message_type": "partial_transcript",
+      "text": "......",
+      "words": []
+    }
+[10:55:05.236] DEBUG (12192): interim transcript
+    transcript: "......"
+[10:55:20.231] DEBUG (12192): User away timeout triggered
+[10:55:33.334] INFO (12192): closing agent session due to participant disconnect (disable via `RoomInputOptions.closeOnDisconnect=False`)
+    participant: "user-1742"
+    reason: "CLIENT_INITIATED"
+[10:55:33.335] DEBUG (12192): aec warmup expired, re-enabling interruptions
+[10:55:33.336] DEBUG (12192): Task.runTask: task AgentActivity_onExit started
+[10:55:33.337] DEBUG (12192): Task.runTask: task AgentActivity_onExit done
+[10:55:33.337] INFO (12192): mainTask: scheduling paused and no more speech tasks to wait
+[10:55:33.337] INFO (12192): AgentActivity mainTask: exiting
+[10:55:33.343] DEBUG (12192): User turn commit task cancelled
+[10:55:33.354] DEBUG (12192): VAD task closed
+[10:55:33.357] INFO (12192): AgentSession closed
+    reason: "participant_disconnected"
+    error: null

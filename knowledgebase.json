@@ -1,0 +1,8 @@
+{
+  "hello": "Hello there! Welcome to IT Solutions Inc. How can I help you today?",
+  "hi": "Hi! Welcome to IT Solutions Inc. How can I assist you?",
+  "help": "I can help you with password resets, network connectivity, and software installation. What do you need?",
+  "password": "To reset your password, please go to the IT portal and click on 'Forgot Password'.",
+  "internet": "If you are having network issues, please try restarting your router or contact the helpdesk at 555-0199.",
+  "default": "I'm sorry, I am just a simple hardcoded brain for testing. I didn't understand that."
+}

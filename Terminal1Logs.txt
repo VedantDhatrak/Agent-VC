@@ -1,0 +1,3 @@
+PS D:\Folder Z\Office extra\LiveKit-Web-AI-VoiceCall> node server.js
+◇ injected env (6) from .env // tip: ⌘ custom filepath { path: '/custom/path/.env' }
+[Token Server] Running on http://localhost:3333/getToken
