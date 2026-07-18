@@ -19,7 +19,7 @@ export function ActiveCallInterface({ onEndCall }) {
       fetch('http://localhost:3333/api/tts', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text: 'Hello, Am I speaking with Vedant?' })
+        body: JSON.stringify({ text: 'नमस्ते, क्या मैं वेदांत से बात कर रहा हूँ?' })
       })
       .then(res => res.json())
       .then(data => {

@@ -38,10 +38,10 @@ app.get('/getToken', async (req, res) => {
 
 app.post('/api/tts', async (req, res) => {
   const { text } = req.body;
-  const apiKey = process.env.DEEPGRAM_API_KEY;
+  const apiKey = process.env.SARVAM_API_KEY;
 
   if (!apiKey) {
-    return res.status(500).json({ error: 'Deepgram API Key not found in .env' });
+    return res.status(500).json({ error: 'Sarvam API Key not found in .env' });
   }
 
   if (!text) {
@@ -49,24 +49,31 @@ app.post('/api/tts', async (req, res) => {
   }
 
   try {
-    const response = await fetch(`https://api.deepgram.com/v1/speak?model=aura-asteria-en&encoding=mp3`, {
+    const response = await fetch('https://api.sarvam.ai/text-to-speech', {
       method: 'POST',
       headers: {
-        'Authorization': `Token ${apiKey}`,
+        'api-subscription-key': apiKey,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ text })
+      body: JSON.stringify({ 
+        inputs: [text],
+        target_language_code: 'hi-IN',
+        speaker: 'shubh',
+        pace: 1.2,
+        model: 'bulbul:v3'
+      })
     });
     
     if (!response.ok) {
-      throw new Error(`Deepgram TTS failed: ${response.statusText}`);
+      throw new Error(`Sarvam TTS failed: ${response.statusText}`);
     }
 
-    const arrayBuffer = await response.arrayBuffer();
-    const buffer = Buffer.from(arrayBuffer);
-    const base64Audio = buffer.toString('base64');
-
-    res.json({ audioContent: base64Audio });
+    const data = await response.json();
+    if (data.audios && data.audios.length > 0) {
+      res.json({ audioContent: data.audios[0] });
+    } else {
+      throw new Error('No audio returned from Sarvam AI');
+    }
   } catch (error) {
     console.error('Error in TTS:', error);
     res.status(500).json({ error: error.message });
