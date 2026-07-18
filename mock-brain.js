@@ -14,9 +14,8 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const systemPrompt = fs.readFileSync('knowledgebase.txt', 'utf8');
-
 app.post('/v1/chat/completions', async (req, res) => {
+  const systemPrompt = fs.readFileSync('knowledgebase.txt', 'utf8');
   const messages = req.body.messages || [];
   const lastUserMsg = messages.reverse().find(m => m.role === 'user')?.content || '';
   
@@ -65,6 +64,10 @@ app.post('/v1/chat/completions', async (req, res) => {
           clearInterval(interval);
         }
       }, 100); // stream one sentence every 100ms
+
+      req.on('close', () => {
+        clearInterval(interval);
+      });
     } else {
       res.json({
         id: 'chatcmpl-mock',

@@ -12,15 +12,21 @@ import { AudioFrame } from '@livekit/rtc-node';
 
 class GoogleRESTChunkedStream extends tts.ChunkedStream {
   label = 'google_rest_tts';
+  constructor(text, tts, connOptions, abortSignal) {
+    super(text, tts, connOptions, abortSignal);
+    this.customAbortSignal = abortSignal;
+  }
+
   async run() {
     const text = this.inputText;
     try {
       const response = await fetch(`https://texttospeech.googleapis.com/v1/text:synthesize?key=${process.env.GOOGLE_API_KEY}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        signal: this.customAbortSignal,
         body: JSON.stringify({
           input: { text },
-          voice: { languageCode: 'en-US', name: 'en-US-Journey-F' },
+          voice: { languageCode: 'hi-IN', name: 'hi-IN-Wavenet-A' },
           audioConfig: { audioEncoding: 'LINEAR16', sampleRateHertz: 24000 }
         })
       });
@@ -31,15 +37,20 @@ class GoogleRESTChunkedStream extends tts.ChunkedStream {
       const samplesPerChannel = pcmData.length / 2;
       const frame = new AudioFrame(pcmData, 24000, 1, samplesPerChannel);
       
+      if (this.customAbortSignal?.aborted) return;
+
       this.queue.put({
         frame,
         text: text,
-        requestId: 'google_rest_tts_req'
+        requestId: 'google_rest_tts_req',
+        segmentId: 'google_rest_tts_seg'
       });
     } catch (e) {
-      console.error('❌ [Google TTS Error]:', e);
-    } finally {
-      this.queue.put(tts.SynthesizeStream.END_OF_STREAM);
+      if (e.name === 'AbortError') {
+        console.log('🛑 [Google TTS]: Synthesis aborted by interruption.');
+      } else {
+        console.error('❌ [Google TTS Error]:', e);
+      }
     }
   }
 }
@@ -49,8 +60,8 @@ class GoogleRESTTTS extends tts.TTS {
   constructor() {
     super(24000, 1, { streaming: false });
   }
-  synthesize(text) {
-    return new GoogleRESTChunkedStream(text, this);
+  synthesize(text, connOptions, abortSignal) {
+    return new GoogleRESTChunkedStream(text, this, connOptions, abortSignal);
   }
   stream() {
     return new tts.StreamAdapterWrapper(this);
@@ -143,10 +154,9 @@ export default defineAgent({
       if (event.isFinal) {
         console.log(`📝 [STT Final]: "${event.transcript}"`);
       } else {
-        process.stdout.write(`\r✍️ [STT Interim]: "${event.transcript}"`);
       }
     });
-    
+
     ctx.room.on('trackSubscribed', (track, pub, participant) => {
       console.log(`🔗 [Room]: Subscribed to ${participant.identity}'s track: ${pub.source}`);
     });
@@ -156,7 +166,7 @@ export default defineAgent({
     });
     // ============================
 
-    session.start({
+    await session.start({
       agent,
       room: ctx.room,
     });

@@ -1,4 +1,5 @@
-import React from 'react';
+
+import React, { useEffect, useRef } from 'react';
 import { 
   useVoiceAssistant, 
   BarVisualizer,
@@ -9,6 +10,27 @@ import { PhoneOff } from 'lucide-react';
 
 export function ActiveCallInterface({ onEndCall }) {
   const { state, audioTrack } = useVoiceAssistant();
+  const greetingPlayed = useRef(false);
+
+  useEffect(() => {
+    if (!greetingPlayed.current) {
+      greetingPlayed.current = true;
+      // Fetch and play hardcoded greeting
+      fetch('http://localhost:3333/api/tts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: 'Hello, Am I speaking with Vedant?' })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.audioContent) {
+          const audio = new Audio(`data:audio/mp3;base64,${data.audioContent}`);
+          audio.play().catch(e => console.error('Audio play error:', e));
+        }
+      })
+      .catch(err => console.error('TTS fetch error:', err));
+    }
+  }, []);
 
   const getAgentStatusText = (agentState) => {
     switch (agentState) {

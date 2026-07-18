@@ -7,6 +7,7 @@ dotenv.config();
 
 const app = express();
 app.use(cors());
+app.use(express.json());
 const port = 3333;
 
 app.get('/getToken', async (req, res) => {
@@ -32,6 +33,39 @@ app.get('/getToken', async (req, res) => {
   } catch (error) {
     console.error('Error generating token:', error);
     return res.status(500).json({ error: error.message });
+  }
+});
+
+app.post('/api/tts', async (req, res) => {
+  const { text } = req.body;
+  const apiKey = process.env.GOOGLE_API_KEY;
+
+  if (!apiKey) {
+    return res.status(500).json({ error: 'Google API Key not found in .env' });
+  }
+
+  if (!text) {
+    return res.status(400).json({ error: 'Text is required' });
+  }
+
+  try {
+    const response = await fetch(`https://texttospeech.googleapis.com/v1/text:synthesize?key=${apiKey}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        input: { text },
+        voice: { languageCode: 'hi-IN', name: 'hi-IN-Wavenet-A' },
+        audioConfig: { audioEncoding: 'MP3' } // We use MP3 for easier frontend playback
+      })
+    });
+    
+    const data = await response.json();
+    if (data.error) throw new Error(data.error.message);
+
+    res.json({ audioContent: data.audioContent });
+  } catch (error) {
+    console.error('Error in TTS:', error);
+    res.status(500).json({ error: error.message });
   }
 });
 
