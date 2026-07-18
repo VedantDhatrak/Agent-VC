@@ -1,14 +1,15 @@
 import express from 'express';
 import fs from 'fs';
 import cors from 'cors';
-import puterLib from '@heyputer/puter.js';
+import OpenAI from 'openai';
 import dotenv from 'dotenv';
 
 dotenv.config();
-const puter = puterLib.default || puterLib;
-if (process.env.PUTER_AUTH_TOKEN) {
-  puter.setAuthToken(process.env.PUTER_AUTH_TOKEN);
-}
+
+const groq = new OpenAI({
+  apiKey: process.env.GROQ_API_KEY,
+  baseURL: 'https://api.groq.com/openai/v1',
+});
 
 const app = express();
 app.use(cors());
@@ -24,24 +25,29 @@ app.post('/v1/chat/completions', async (req, res) => {
     ...messages.reverse() // reverse back to original order
   ];
 
-  try {
-    console.log(`\n🧠 [Puter Brain]: Thinking about query: "${lastUserMsg}"`);
+    try {
+    console.log(`\n🧠 [Groq Brain]: Thinking about query: "${lastUserMsg}"`);
 
     if (req.body.stream) {
       res.setHeader('Content-Type', 'text/event-stream');
       res.setHeader('Cache-Control', 'no-cache');
       res.setHeader('Connection', 'keep-alive');
 
-      const stream = await puter.ai.chat(promptMessages, { stream: true });
+      const stream = await groq.chat.completions.create({
+        model: 'llama-3.1-8b-instant',
+        messages: promptMessages,
+        stream: true,
+      });
       
       for await (const chunk of stream) {
-        if (chunk?.text) {
+        const text = chunk.choices[0]?.delta?.content || '';
+        if (text) {
           const sseChunk = {
             id: 'chatcmpl-mock',
             object: 'chat.completion.chunk',
             created: Math.floor(Date.now() / 1000),
             model: req.body.model,
-            choices: [{ index: 0, delta: { content: chunk.text }, finish_reason: null }]
+            choices: [{ index: 0, delta: { content: text }, finish_reason: null }]
           };
           res.write(`data: ${JSON.stringify(sseChunk)}\n\n`);
         }
@@ -58,9 +64,12 @@ app.post('/v1/chat/completions', async (req, res) => {
       res.write('data: [DONE]\n\n');
       res.end();
     } else {
-      const result = await puter.ai.chat(promptMessages);
-      let reply = result.message?.content || "I don't have that information.";
-      console.log(`🧠 [Puter Brain]: Replying with: "${reply}"\n`);
+      const result = await groq.chat.completions.create({
+        model: 'llama-3.1-8b-instant',
+        messages: promptMessages,
+      });
+      let reply = result.choices[0]?.message?.content || "I don't have that information.";
+      console.log(`🧠 [Groq Brain]: Replying with: "${reply}"\n`);
       res.json({
         id: 'chatcmpl-mock',
         object: 'chat.completion',
@@ -70,7 +79,7 @@ app.post('/v1/chat/completions', async (req, res) => {
       });
     }
   } catch (error) {
-    console.error('Puter AI Error:', error);
+    console.error('Groq AI Error:', error);
     res.status(500).json({ error: 'Failed to generate response' });
   }
 });
