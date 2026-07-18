@@ -4,7 +4,7 @@ import { cli, voice, defineAgent } from '@livekit/agents';
 import * as elevenlabs from '@livekit/agents-plugin-elevenlabs';
 import * as openai from '@livekit/agents-plugin-openai';
 import * as silero from '@livekit/agents-plugin-silero';
-import * as deepgram from '@livekit/agents-plugin-deepgram';
+import * as sarvam from '@livekit/agents-plugin-sarvam';
 
 dotenv.config();
 
@@ -28,16 +28,20 @@ export default defineAgent({
     });
 
     console.log('[Agent] Initializing STT...');
-    // Ears: Deepgram Speech-to-Text
-    const stt = new deepgram.STT({
-      apiKey: process.env.DEEPGRAM_API_KEY,
+    // Ears: Sarvam Speech-to-Text
+    const stt = new sarvam.STT({
+      model: 'saaras:v3',
+      languageCode: 'hi-IN',
+      apiKey: process.env.SARVAM_API_KEY,
     });
 
     console.log('[Agent] Initializing TTS...');
-    // Mouth: Deepgram Text-to-Speech
-    const dgTts = new deepgram.TTS({
-      model: 'aura-asteria-en',
-      apiKey: process.env.DEEPGRAM_API_KEY,
+    // Mouth: Sarvam Text-to-Speech
+    const dgTts = new sarvam.TTS({
+      model: 'bulbul:v3',
+      targetLanguageCode: 'hi-IN',
+      pace: 1.2,
+      apiKey: process.env.SARVAM_API_KEY,
     });
 
     console.log('[Agent] Loading VAD model...');
