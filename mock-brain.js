@@ -22,7 +22,7 @@ app.post('/v1/chat/completions', async (req, res) => {
   
   const promptMessages = [
     { role: 'system', content: systemPrompt },
-    ...messages.reverse() // reverse back to original order
+    ...messages.reverse().filter(m => m.role !== 'system')
   ];
 
     try {
@@ -32,14 +32,23 @@ app.post('/v1/chat/completions', async (req, res) => {
       res.setHeader('Content-Type', 'text/event-stream');
       res.setHeader('Cache-Control', 'no-cache');
       res.setHeader('Connection', 'keep-alive');
+      
+      let isAborted = false;
+      const controller = new AbortController();
+      req.on('aborted', () => {
+        console.log('🔌 [Groq Brain]: Connection aborted by client (User Interruption).');
+        isAborted = true;
+        controller.abort();
+      });
 
       const stream = await groq.chat.completions.create({
         model: 'llama-3.1-8b-instant',
         messages: promptMessages,
         stream: true,
-      });
+      }, { signal: controller.signal });
       
       for await (const chunk of stream) {
+        if (isAborted) break;
         const text = chunk.choices[0]?.delta?.content || '';
         if (text) {
           const sseChunk = {
@@ -53,16 +62,18 @@ app.post('/v1/chat/completions', async (req, res) => {
         }
       }
 
-      const endChunk = {
-        id: 'chatcmpl-mock',
-        object: 'chat.completion.chunk',
-        created: Math.floor(Date.now() / 1000),
-        model: req.body.model,
-        choices: [{ index: 0, delta: {}, finish_reason: 'stop' }]
-      };
-      res.write(`data: ${JSON.stringify(endChunk)}\n\n`);
-      res.write('data: [DONE]\n\n');
-      res.end();
+      if (!isAborted) {
+        const endChunk = {
+          id: 'chatcmpl-mock',
+          object: 'chat.completion.chunk',
+          created: Math.floor(Date.now() / 1000),
+          model: req.body.model,
+          choices: [{ index: 0, delta: {}, finish_reason: 'stop' }]
+        };
+        res.write(`data: ${JSON.stringify(endChunk)}\n\n`);
+        res.write('data: [DONE]\n\n');
+        res.end();
+      }
     } else {
       const result = await groq.chat.completions.create({
         model: 'llama-3.1-8b-instant',
@@ -79,8 +90,13 @@ app.post('/v1/chat/completions', async (req, res) => {
       });
     }
   } catch (error) {
+    if (error.name === 'AbortError' || error.name === 'APIUserAbortError') {
+      return; // Handled silently since client disconnected
+    }
     console.error('Groq AI Error:', error);
-    res.status(500).json({ error: 'Failed to generate response' });
+    if (!res.headersSent) {
+      res.status(500).json({ error: 'Failed to generate response' });
+    }
   }
 });
 
