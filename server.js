@@ -38,10 +38,10 @@ app.get('/getToken', async (req, res) => {
 
 app.post('/api/tts', async (req, res) => {
   const { text } = req.body;
-  const apiKey = process.env.GOOGLE_API_KEY;
+  const apiKey = process.env.DEEPGRAM_API_KEY;
 
   if (!apiKey) {
-    return res.status(500).json({ error: 'Google API Key not found in .env' });
+    return res.status(500).json({ error: 'Deepgram API Key not found in .env' });
   }
 
   if (!text) {
@@ -49,20 +49,24 @@ app.post('/api/tts', async (req, res) => {
   }
 
   try {
-    const response = await fetch(`https://texttospeech.googleapis.com/v1/text:synthesize?key=${apiKey}`, {
+    const response = await fetch(`https://api.deepgram.com/v1/speak?model=aura-asteria-en&encoding=mp3`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        input: { text },
-        voice: { languageCode: 'hi-IN', name: 'hi-IN-Wavenet-A' },
-        audioConfig: { audioEncoding: 'MP3' } // We use MP3 for easier frontend playback
-      })
+      headers: {
+        'Authorization': `Token ${apiKey}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ text })
     });
     
-    const data = await response.json();
-    if (data.error) throw new Error(data.error.message);
+    if (!response.ok) {
+      throw new Error(`Deepgram TTS failed: ${response.statusText}`);
+    }
 
-    res.json({ audioContent: data.audioContent });
+    const arrayBuffer = await response.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
+    const base64Audio = buffer.toString('base64');
+
+    res.json({ audioContent: base64Audio });
   } catch (error) {
     console.error('Error in TTS:', error);
     res.status(500).json({ error: error.message });

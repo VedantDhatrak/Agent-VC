@@ -4,69 +4,14 @@ import { cli, voice, defineAgent } from '@livekit/agents';
 import * as elevenlabs from '@livekit/agents-plugin-elevenlabs';
 import * as openai from '@livekit/agents-plugin-openai';
 import * as silero from '@livekit/agents-plugin-silero';
+import * as deepgram from '@livekit/agents-plugin-deepgram';
 
 dotenv.config();
 
 import { tts } from '@livekit/agents';
 import { AudioFrame } from '@livekit/rtc-node';
 
-class GoogleRESTChunkedStream extends tts.ChunkedStream {
-  label = 'google_rest_tts';
-  constructor(text, tts, connOptions, abortSignal) {
-    super(text, tts, connOptions, abortSignal);
-    this.customAbortSignal = abortSignal;
-  }
-
-  async run() {
-    const text = this.inputText;
-    try {
-      const response = await fetch(`https://texttospeech.googleapis.com/v1/text:synthesize?key=${process.env.GOOGLE_API_KEY}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        signal: this.customAbortSignal,
-        body: JSON.stringify({
-          input: { text },
-          voice: { languageCode: 'hi-IN', name: 'hi-IN-Wavenet-A' },
-          audioConfig: { audioEncoding: 'LINEAR16', sampleRateHertz: 24000 }
-        })
-      });
-      const data = await response.json();
-      if (data.error) throw new Error(data.error.message);
-      
-      const pcmData = Buffer.from(data.audioContent, 'base64');
-      const samplesPerChannel = pcmData.length / 2;
-      const frame = new AudioFrame(pcmData, 24000, 1, samplesPerChannel);
-      
-      if (this.customAbortSignal?.aborted) return;
-
-      this.queue.put({
-        frame,
-        text: text,
-        requestId: 'google_rest_tts_req',
-        segmentId: 'google_rest_tts_seg'
-      });
-    } catch (e) {
-      if (e.name === 'AbortError') {
-        console.log('🛑 [Google TTS]: Synthesis aborted by interruption.');
-      } else {
-        console.error('❌ [Google TTS Error]:', e);
-      }
-    }
-  }
-}
-
-class GoogleRESTTTS extends tts.TTS {
-  label = 'google_rest_tts';
-  constructor() {
-    super(24000, 1, { streaming: false });
-  }
-  synthesize(text, connOptions, abortSignal) {
-    return new GoogleRESTChunkedStream(text, this, connOptions, abortSignal);
-  }
-  stream() {
-    return new tts.StreamAdapterWrapper(this);
-  }
-}
+// Removed custom Google TTS
 
 export default defineAgent({
   entry: async (ctx) => {
@@ -74,6 +19,7 @@ export default defineAgent({
     await ctx.connect();
     console.log(`[Agent] Successfully connected to room: ${ctx.room.name}`);
 
+    console.log('[Agent] Initializing LLM...');
     // Brain: Mock JSON Brain (via OpenAI Plugin overriding baseURL)
     const llm = new openai.LLM({
       baseURL: 'http://localhost:3334/v1/',
@@ -81,21 +27,30 @@ export default defineAgent({
       model: 'mock-model', 
     });
 
-    // Ears: ElevenLabs Speech-to-Text
-    const stt = new elevenlabs.STT({
-      apiKey: process.env.ELEVENLABS_API_KEY,
-      model: 'scribe_v2_realtime',
-      serverVad: {}, // Required to force ElevenLabs to commit transcripts and emit isFinal
+    console.log('[Agent] Initializing STT...');
+    // Ears: Deepgram Speech-to-Text
+    const stt = new deepgram.STT({
+      apiKey: process.env.DEEPGRAM_API_KEY,
     });
 
-    // Mouth: Google REST Text-to-Speech
-    const customTts = new GoogleRESTTTS();
+    console.log('[Agent] Initializing TTS...');
+    // Mouth: Deepgram Text-to-Speech
+    const dgTts = new deepgram.TTS({
+      model: 'aura-asteria-en',
+      apiKey: process.env.DEEPGRAM_API_KEY,
+    });
 
+    console.log('[Agent] Loading VAD model...');
+    const vadModel = await silero.VAD.load({
+      minSilenceDuration: 250, // Optimize STT latency by reducing silence wait time
+    });
+
+    console.log('[Agent] Creating Agent instance...');
     const agent = new voice.Agent({
-      vad: await silero.VAD.load(),
+      vad: vadModel,
       stt: stt,
       llm: llm,
-      tts: customTts,
+      tts: dgTts,
       instructions: 'You are a helpful voice assistant.',
     });
 

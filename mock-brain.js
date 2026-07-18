@@ -26,49 +26,41 @@ app.post('/v1/chat/completions', async (req, res) => {
 
   try {
     console.log(`\n🧠 [Puter Brain]: Thinking about query: "${lastUserMsg}"`);
-    const result = await puter.ai.chat(promptMessages);
-    let reply = result.message?.content || "I don't have that information.";
-    console.log(`🧠 [Puter Brain]: Replying with: "${reply}"\n`);
 
     if (req.body.stream) {
       res.setHeader('Content-Type', 'text/event-stream');
       res.setHeader('Cache-Control', 'no-cache');
       res.setHeader('Connection', 'keep-alive');
 
-      // Split reply by sentences or fallback to the whole reply
-      const chunks = reply.match(/[^.!?]+[.!?]*/g) || [reply];
-      let i = 0;
-
-      const interval = setInterval(() => {
-        if (i < chunks.length) {
-          const chunk = {
+      const stream = await puter.ai.chat(promptMessages, { stream: true });
+      
+      for await (const chunk of stream) {
+        if (chunk?.text) {
+          const sseChunk = {
             id: 'chatcmpl-mock',
             object: 'chat.completion.chunk',
             created: Math.floor(Date.now() / 1000),
             model: req.body.model,
-            choices: [{ index: 0, delta: { content: (i > 0 ? ' ' : '') + chunks[i].trim() }, finish_reason: null }]
+            choices: [{ index: 0, delta: { content: chunk.text }, finish_reason: null }]
           };
-          res.write(`data: ${JSON.stringify(chunk)}\n\n`);
-          i++;
-        } else {
-          const endChunk = {
-            id: 'chatcmpl-mock',
-            object: 'chat.completion.chunk',
-            created: Math.floor(Date.now() / 1000),
-            model: req.body.model,
-            choices: [{ index: 0, delta: {}, finish_reason: 'stop' }]
-          };
-          res.write(`data: ${JSON.stringify(endChunk)}\n\n`);
-          res.write('data: [DONE]\n\n');
-          res.end();
-          clearInterval(interval);
+          res.write(`data: ${JSON.stringify(sseChunk)}\n\n`);
         }
-      }, 100); // stream one sentence every 100ms
+      }
 
-      req.on('close', () => {
-        clearInterval(interval);
-      });
+      const endChunk = {
+        id: 'chatcmpl-mock',
+        object: 'chat.completion.chunk',
+        created: Math.floor(Date.now() / 1000),
+        model: req.body.model,
+        choices: [{ index: 0, delta: {}, finish_reason: 'stop' }]
+      };
+      res.write(`data: ${JSON.stringify(endChunk)}\n\n`);
+      res.write('data: [DONE]\n\n');
+      res.end();
     } else {
+      const result = await puter.ai.chat(promptMessages);
+      let reply = result.message?.content || "I don't have that information.";
+      console.log(`🧠 [Puter Brain]: Replying with: "${reply}"\n`);
       res.json({
         id: 'chatcmpl-mock',
         object: 'chat.completion',
