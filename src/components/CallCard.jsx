@@ -30,7 +30,7 @@ export function CallCard({ onStartCall }) {
   };
 
   return (
-    <div className="glass-card">
+    <div className="glass-card app-card">
       <h1 className="title">AI Voice Assistant</h1>
       <p className="subtitle">Start a bidirectional real-time conversation</p>
       
@@ -54,9 +54,9 @@ export function CallCard({ onStartCall }) {
         <span>{loading ? 'Connecting...' : 'Start Call'}</span>
       </button>
       
-      <p style={{ marginTop: '1rem', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+      {/* <p style={{ marginTop: '1rem', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
         Make sure the backend server (port 3333) is running!
-      </p>
+      </p> */}
     </div>
   );
 }

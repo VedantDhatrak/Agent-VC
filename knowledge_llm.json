@@ -1,0 +1,67 @@
+
+{
+  "bot_name": "Mixoop Assistant",
+  "default_fallback": "I'm not quite sure about that request, but our support team has been notified! Alternatively, you can contact us directly at mixoop@gmail.com.",
+  "responses": [
+    {
+      "intent": "greeting",
+      "keywords": ["hi", "hello", "hey", "start", "greetings", "good morning", "good afternoon"],
+      "reply": "Hello! Welcome to the Mixoop Ecosystem. I'm here to help you navigate our unified SaaS solutions. How can I assist you today?"
+    },
+    {
+      "intent": "pricing",
+      "keywords": ["price", "cost", "pricing", "plans", "subscription", "fee", "how much"],
+      "reply": "Our pricing is tailored to your needs! The basic plan starts at 2000 Rs/month. For larger organizations, our Enterprise cloud tier scales flexibly with your infrastructure usage. Would you like to speak to sales for a custom quote?"
+    },
+    {
+      "intent": "support_transfer",
+      "keywords": ["support", "help", "human", "live agent", "operator", "talk to a person", "issue", "agent"],
+      "reply": "I understand you need more specific help. Transferring your conversation session to a live agent right now. Please hold for a moment..."
+    },
+    {
+      "intent": "about_mixoop",
+      "keywords": ["what is mixoop", "about", "ecosystem", "what do you do", "explain mixoop"],
+      "reply": "Mixoop is a unified SaaS ecosystem designed to streamline your business operations. Through a single Mixoop account, you get seamless Single Sign-On (SSO) access to all our powerful tools, including HRMS, Processos, and Formflow."
+    },
+    {
+      "intent": "products_hrms",
+      "keywords": ["hrms", "hr", "human resources", "payroll", "employee management", "leave", "attendance"],
+      "reply": "Our HRMS (hrms.mixoop.com) is a comprehensive Human Resources Management System that helps you manage employee data, attendance, payroll, and more, all connected to your main Mixoop identity."
+    },
+    {
+      "intent": "products_processos",
+      "keywords": ["processos", "process", "workflow", "automation", "operations", "tasks"],
+      "reply": "Processos (processos.mixoop.com) is our dedicated workflow and operations management tool. It allows you to automate, track, and optimize your business processes seamlessly."
+    },
+    {
+      "intent": "products_formflow",
+      "keywords": ["formflow", "forms", "survey", "data collection", "form builder"],
+      "reply": "Formflow (formflow.mixoop.com) lets you create custom forms, surveys, and data collection flows with ease. Submissions are instantly tied to your unified ecosystem data."
+    },
+    {
+      "intent": "authentication_sso",
+      "keywords": ["login", "sso", "sign in", "account", "register", "signup", "single sign on", "auth"],
+      "reply": "We use a centralized Identity Hub (accounts.mixoop.com). Once you log in there securely, you get instant, automatic access across all your Mixoop apps (HRMS, Processos, Formflow) without needing to sign in again!"
+    },
+    {
+      "intent": "sales_contact",
+      "keywords": ["sales", "demo", "buy", "purchase", "contact sales", "quote"],
+      "reply": "Our sales team would love to show you how Mixoop can transform your business! You can book a demo by emailing us at mixoop@gmail.com, or I can connect you to a representative right now."
+    },
+    {
+      "intent": "security_privacy",
+      "keywords": ["security", "privacy", "data", "safe", "secure", "database"],
+      "reply": "Security is our top priority. We use strict database isolation for our products (e.g., dedicated DBs for Auth, HRMS, and Processos) and utilize secure JWT-based authentication for safe, cross-domain sessions."
+    },
+    {
+      "intent": "tech_stack",
+      "keywords": ["tech", "stack", "technology", "built with", "developer", "api"],
+      "reply": "For the developers out there: Mixoop is proudly built on the MERN stack with a centralized Identity Provider using OpenID Connect (OIDC) principles and MongoDB Atlas for our isolated database clusters!"
+    },
+    {
+      "intent": "goodbye",
+      "keywords": ["bye", "goodbye", "exit", "close", "see ya", "quit", "thanks", "thank you"],
+      "reply": "Thank you for visiting Mixoop! Have a great day. Let us know if you need anything else in the future."
+    }
+  ]
+}

@@ -48,7 +48,7 @@ export function ActiveCallInterface({ onEndCall }) {
   const isWorking = state === 'listening' || state === 'thinking' || state === 'speaking';
 
   return (
-    <div className="glass-card" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+    <div className="glass-card app-card" style={{ alignItems: 'center' }}>
       
       <div className="status-indicator" style={{ marginBottom: '2rem', marginTop: '1rem', padding: '0.75rem 1.5rem', borderRadius: '50px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}>
         <div className={`dot ${state}`} style={{ 

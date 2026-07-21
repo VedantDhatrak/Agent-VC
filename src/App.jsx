@@ -5,6 +5,7 @@ import './index.css';
 
 import { CallCard } from './components/CallCard';
 import { ActiveCallInterface } from './components/ActiveCallInterface';
+import { WhatsAppDashboard } from './components/WhatsAppDashboard';
 
 function App() {
   const [connectionDetails, setConnectionDetails] = useState(null);
@@ -18,7 +19,7 @@ function App() {
   };
 
   return (
-    <div className="app-container">
+    <div className="app-layout">
       {!connectionDetails ? (
         <CallCard onStartCall={handleStartCall} />
       ) : (
@@ -29,10 +30,13 @@ function App() {
           audio={true}
           video={false}
           onDisconnected={handleEndCall}
+          className="app-card"
+          style={{ display: 'flex' }}
         >
           <ActiveCallInterface onEndCall={handleEndCall} />
         </LiveKitRoom>
       )}
+      <WhatsAppDashboard />
     </div>
   );
 }
