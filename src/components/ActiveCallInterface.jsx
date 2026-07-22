@@ -16,7 +16,8 @@ export function ActiveCallInterface({ onEndCall }) {
     if (!greetingPlayed.current) {
       greetingPlayed.current = true;
       // Fetch and play hardcoded greeting
-      fetch('http://localhost:3333/api/tts', {
+     // fetch('http://localhost:3333/api/tts', {
+	fetch('/api/tts', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ text: 'नमस्ते, क्या मैं वेदांत से बात कर रहा हूँ?' })

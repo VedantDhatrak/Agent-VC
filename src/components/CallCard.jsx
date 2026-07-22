@@ -10,7 +10,8 @@ export function CallCard({ onStartCall }) {
     setError(null);
     try {
       // Fetch token from our local backend
-      const response = await fetch('http://localhost:3333/getToken?roomName=my-ai-room');
+     // const response = await fetch('http://localhost:3333/getToken?roomName=my-ai-room');
+const response = await fetch("/getToken?roomName=my-ai-room") ;
       const data = await response.json();
 
       if (!response.ok) {

@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { MessageSquare, Zap, Settings, Send, Users, ShieldAlert, CheckCircle2 } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { MessageSquare, Zap, Settings, Send, Users, ShieldAlert, CheckCircle2, Smartphone } from 'lucide-react';
+
 
 export const WhatsAppDashboard = () => {
   const [isOfficialEnabled, setIsOfficialEnabled] = useState(false);
@@ -7,8 +8,10 @@ export const WhatsAppDashboard = () => {
   const [otpPhone, setOtpPhone] = useState('');
   const [officialPhone, setOfficialPhone] = useState('');
   const [loadingAction, setLoadingAction] = useState(null);
+ const [isSessionConnected, setIsSessionConnected] = useState(false);
+  const [qrCodeData, setQrCodeData] = useState(null);
 
-  const API_BASE = 'http://localhost:3333/api';
+  const API_BASE = '/api';
 
   const handleToggle = async (type) => {
     setLoadingAction(`toggle-${type}`);
@@ -45,6 +48,26 @@ export const WhatsAppDashboard = () => {
       setLoadingAction(null);
     }
   };
+
+  const fetchSessionStatus = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/session-status`);
+      const data = await res.json();
+      setIsSessionConnected(data.connected);
+      if (data.qrcode) {
+        setQrCodeData(data.qrcode);
+      } else {
+        setQrCodeData(null);
+      }
+    } catch (err) {
+      console.error("Failed to check session status:", err);
+    }
+  };
+  useEffect(() => {
+    fetchSessionStatus();
+    const interval = setInterval(fetchSessionStatus, 10000); // Check every 10 seconds
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <>
@@ -114,7 +137,20 @@ export const WhatsAppDashboard = () => {
             <Zap className="icon-yellow" size={24} />
             <h2 className="title" style={{fontSize: '1.5rem', marginBottom: 0}}>Unofficial AI</h2>
           </div>
-          <p className="subtitle" style={{marginBottom: '1.5rem'}}>Manage Baileys Integrations</p>
+         <p className="subtitle" style={{marginBottom: '1.5rem'}}>Manage Baileys Integrations</p>
+         <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', marginBottom: '1.5rem'}}>
+            <Smartphone size={16} color={isSessionConnected ? "var(--success)" : "var(--danger)"} />
+            <span style={{fontSize: '0.9rem', color: isSessionConnected ? "var(--success)" : "var(--danger)"}}>
+              {isSessionConnected ? 'WhatsApp Connected' : 'WhatsApp Disconnected'}
+            </span>
+          </div>
+          
+          {!isSessionConnected && qrCodeData && (
+            <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '1.5rem', padding: '1rem', background: 'rgba(255,255,255,0.05)', borderRadius: '12px'}}>
+              <p style={{fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '0.5rem'}}>Scan this QR code in WhatsApp</p>
+              <img src={qrCodeData} alt="WhatsApp QR Code" style={{width: '150px', height: '150px', borderRadius: '8px', background: 'white', padding: '0.5rem'}} />
+            </div>
+          )}
           
           <div className="wa-feature-row">
             <div className="feature-info">

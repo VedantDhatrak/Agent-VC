@@ -300,6 +300,25 @@ app.post('/api/tts', async (req, res) => {
   }
 });
 
-app.listen(port, () => {
-  console.log(`[Token Server] Running on http://localhost:${port}/getToken`);
+app.get('/api/session-status', async (req, res) => {
+    try {
+        const response = await axios.get('http://localhost:8080/instance/fetchInstances', { headers: { 'apikey': 'mixoop_secret_key_2026' } });
+        const session = response.data.find(inst => inst.name === 'mixoop_whatsapp_session');
+        if (session && session.connectionStatus === 'open') { return res.json({ connected: true }); }
+        try {
+            const qrRes = await axios.get('http://localhost:8080/instance/connect/mixoop_whatsapp_session', { headers: { 'apikey': 'session_secure_token_123' } });
+            if (qrRes.data && qrRes.data.base64) { return res.json({ connected: false, qrcode: qrRes.data.base64 }); }
+        } catch (e) {}
+        return res.json({ connected: false, qrcode: null });
+    } catch (err) { return res.json({ connected: false, qrcode: null }); }
+});
+
+// app.listen(port, () => {
+//   console.log(`[Token Server] Running on http://localhost:${port}/getToken`);
+// });
+
+
+app.listen(port, "0.0.0.0", () => {
+console.log(`[Token Server] Running on http://0.0.0.0:${port}/getToken`);
+console.log(`[Token Server] Public URL: http://65.0.87.17:${port}/getToken`);
 });
